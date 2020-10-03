@@ -64,11 +64,12 @@ def main():
         with os.scandir(path) as directory:
             for entry in directory:
                 screen_shot = re.search('^Screen Shot \d\d\d\d-\d\d-\d\d at .+png$', entry.name)
-                screen_shot_time = os.stat(entry.path).st_atime
-                is_gt_30days = screen_shot_time <= (time.time() - 2592000)
-                if screen_shot and is_gt_30days:
-                    os.remove(entry.path)
-                    logging.info('Removed %s', entry.name)
+                if screen_shot:
+                    screen_shot_time = os.stat(entry.path).st_atime
+                    is_gt_30days = screen_shot_time <= (time.time() - 2592000)
+                    if is_gt_30days:
+                        os.remove(entry.path)
+                        logging.info('Removed %s', entry.name)
     except Exception as error:
         logging.error('main(): %s', error)
 
